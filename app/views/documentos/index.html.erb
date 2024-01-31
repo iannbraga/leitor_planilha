@@ -1,0 +1,38 @@
+<!-- app/views/documentos/index.html.erb -->
+<h1>Formulário com Arquivo</h1>
+
+<%= form_tag('/enviar_arquivo', multipart: true) do %>
+  <p>
+    <%= label_tag :arquivo, 'Selecione um arquivo:' %>
+    <%= file_field_tag :arquivo %>
+  </p>
+
+  <p>
+    <%= submit_tag 'Enviar' %>
+  </p>
+<% end %>
+
+<h1>Dados Recebidos do Arquivo</h1>
+
+<% if @dados %>
+    <table class="tabela texto-centralizado">
+        <thead>
+            <tr>
+                <% @dados.first.each do |cabecalho| %>
+                    <th><%= cabecalho %></th>
+                <% end %>
+            </tr>
+        </thead>
+        <tbody>
+            <% @dados[1..-1].each do |linha| %>
+                <tr>
+                    <% linha.each do |celula| %>
+                        <td><%= celula %></td>
+                    <% end %>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% else %>
+  <p>Nenhum dado recebido.</p>
+<% end %>
