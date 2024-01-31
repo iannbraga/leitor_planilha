@@ -54,7 +54,7 @@ class DocumentosController < ApplicationController
     # Supondo que a coluna CPF esteja na posição 1 (índice 0)
     coluna_cpf = encontrar_coluna_por_nome(/cpf/i)
 
-    if coluna_cpf
+    if coluna_cpf != nil
       @dados.each do |linha|
         cpf = linha[coluna_cpf]
 
@@ -71,18 +71,18 @@ class DocumentosController < ApplicationController
 
   def ajustar_total_liquido
     coluna_total_liquido = encontrar_coluna_por_nome(/total_liquido/i)
-
-    if coluna_total_liquido
+    
+    if coluna_total_liquido != nil
         @dados.each do |linha|
-            total_liquido = linha[coluna_total_liquido]
+          total_liquido = linha[coluna_total_liquido]
 
-            # Remover o R$ e substituir '.' por '_' e ',' por '.'
-            total_liquido.gsub!("R$", "")
-            total_liquido.gsub!(".", "_")
-            total_liquido.gsub!(",", ".")
+          # Remover o R$ e substituir '.' por '_' e ',' por '.'
+          total_liquido.gsub!("R$", "")
+          total_liquido.gsub!(".", "_")
+          total_liquido.gsub!(",", ".")
 
-            # Adicionar o total_liquido ajustado de volta à linha
-            linha[coluna_total_liquido] = total_liquido
+          # Adicionar o total_liquido ajustado de volta à linha
+          linha[coluna_total_liquido] = total_liquido
         end
     else
         flash[:alert] = "Coluna TOTAL_LIQUIDO não encontrada."
@@ -92,7 +92,7 @@ class DocumentosController < ApplicationController
   def ajustar_valor_bruto
     coluna_valor_bruto = encontrar_coluna_por_nome(/valor_bruto/i)
 
-    if coluna_valor_bruto
+    if coluna_valor_bruto != nil
         @dados.each do |linha|
             valor_bruto = linha[coluna_valor_bruto]
 
@@ -110,8 +110,8 @@ class DocumentosController < ApplicationController
   end
 
   def encontrar_coluna_por_nome(nome_regex)
-    coluna = @dados.first.index { |cabecalho| cabecalho =~ nome_regex }
+    coluna = @dados.first&.index { |cabecalho| cabecalho =~ nome_regex }
 
-    coluna || flash[:alert] = "Coluna #{nome_regex.inspect} não encontrada."
+    coluna || nil
   end
 end
