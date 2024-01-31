@@ -9,17 +9,25 @@ class DocumentosController < ApplicationController
   def enviar_arquivo
     arquivo = params[:arquivo]
 
-    if arquivo
+    if arquivo && arquivo_valido?(arquivo)
       ler_conteudo(arquivo)
       ajustar_campos
     else
-      flash[:alert] = "Nenhum arquivo foi enviado."
+      flash[:alert] = "Arquivo inválido."
     end
 
     render :index  # Renderiza novamente a página de índice para exibir os resultados
   end
 
   private
+
+  def arquivo_valido?(arquivo)
+    def arquivo_valido?(arquivo)
+        permitir_extensoes = ['.xls', '.xlsx']
+        extensao = File.extname(arquivo.original_filename).downcase
+        permitir_extensoes.include?(extensao)
+    end
+  end
 
   def ler_conteudo(caminho_do_arquivo)
     roo = Roo::Spreadsheet.open(caminho_do_arquivo)
